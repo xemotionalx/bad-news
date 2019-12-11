@@ -3,15 +3,27 @@ var mongojs = require("mongojs");
 var logger = require("morgan");
 var cheerio = require("cheerio");
 var axios = require("axios");
-var hbs = require("express-handlebars");
-var mongoose = require("mongoose");
+var PORT = process.env.PORT || 8080;
 
 var app = express();
 
-console.log("\n***********************************\n" +
-    "Grabbing every thread title\n" +
-    "from jezebel's the slot:" +
-    "\n***********************************\n");
+// HANDLEBARS SETUP
+var exphbs = require("express-handlebars");
+
+app.engine(
+    "handlebars",
+    exphbs({
+        defaultLayout: "main",
+    })
+);
+app.set("view engine", "handlebars");
+require("./routes/html-routes")(app);
+
+
+
+
+
+//SCRAPING THE ARTICLES WITH CHEERIO
 
 axios.get("https://theslot.jezebel.com/").then(function(response) {
 
@@ -50,4 +62,9 @@ axios.get("https://theslot.jezebel.com/").then(function(response) {
 
     // Log the results once you've looped through each of the elements found with cheerio
     console.log(articleArr);
+});
+
+//START THE SERVER - LISTEN TO REQUESTS
+app.listen(PORT, function() {
+    console.log("Server listening on: http://localhost:" + PORT);
 });
