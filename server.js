@@ -1,11 +1,29 @@
 var express = require("express");
-var mongojs = require("mongojs");
 var logger = require("morgan");
+var mongoose = require("mongoose");
+
 var cheerio = require("cheerio");
 var axios = require("axios");
+
+// Require all models
+var db = require("./models");
+
+//sets port
 var PORT = process.env.PORT || 8080;
 
+//init express
 var app = express();
+
+// Configure middleware
+// Use morgan logger for logging requests
+app.use(logger("dev"));
+// Parse request body as JSON
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+// Make public a static folder
+app.use(express.static("public"));
+//SERVE HTML ROUTES
+require("./routes/html-routes")(app);
 
 // HANDLEBARS SETUP
 var exphbs = require("express-handlebars");
@@ -18,51 +36,10 @@ app.engine(
 );
 app.set("view engine", "handlebars");
 require("./routes/html-routes")(app);
+require("./routes/api-routes")(app);
 
+mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
 
-
-
-
-//SCRAPING THE ARTICLES WITH CHEERIO
-
-axios.get("https://theslot.jezebel.com/").then(function(response) {
-
-    var $ = cheerio.load(response.data);
-
-    var headlineArr = [];
-    var urlArr = [];
-    var summaryArr = [];
-
-    var articleArr = [];
-
-    $(".sc-3kpz0l-7").each(function(i, element) {
-        var headline = $(element).text();
-        var url = $(element).children().attr("href");
-
-        headlineArr.push(headline);
-        urlArr.push(url);
-    });
-
-    $(".sc-3kpz0l-6").each(function(i, element) {
-        var summary = $(element).text();
-        summaryArr.push(summary);
-    });
-
-    for (var i = 0; i < headlineArr.length; i++) {
-        var headline = headlineArr[i];
-        var url = urlArr[i];
-        var summary = summaryArr[i];
-
-        articleArr.push({
-            headline: headline,
-            url: url,
-            summary: summary
-        })
-    };
-
-    // Log the results once you've looped through each of the elements found with cheerio
-    console.log(articleArr);
-});
 
 //START THE SERVER - LISTEN TO REQUESTS
 app.listen(PORT, function() {

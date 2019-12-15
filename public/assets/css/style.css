@@ -1,3 +1,45 @@
 body {
-    background-color: pink;
+    background-color: #b70009;
+}
+
+.header {
+    text-align: center;
+}
+
+.heading-main {
+    color: #ffffff;
+}
+
+.btn-nav {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.news-section {
+    padding-top: 20px;
+}
+
+.news-box {
+    background-color: #e5e5e5;
+    padding: 5px;
+}
+
+.comment-box {
+    background-color: #fff;
+    text-align: center;
+    padding: 10px 10px 20px 10px;
+}
+
+.news-box a:link {
+    color: #2E4DDB;
+}
+
+.news-box a:hover {
+    color: #7D8CC4;
+}
+
+.titleinput,
+.bodyinput {
+    width: 80%;
+    margin-bottom: 8px;
 }
