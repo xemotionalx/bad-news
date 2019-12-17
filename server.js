@@ -2,9 +2,6 @@ var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
 
-var cheerio = require("cheerio");
-var axios = require("axios");
-
 // Require all models
 var db = require("./models");
 
@@ -38,7 +35,8 @@ app.set("view engine", "handlebars");
 require("./routes/html-routes")(app);
 require("./routes/api-routes")(app);
 
-mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/badnews"
+mongoose.connect(MONGODB_URI);
 
 
 //START THE SERVER - LISTEN TO REQUESTS
