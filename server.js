@@ -1,6 +1,7 @@
 var express = require("express");
 var logger = require("morgan");
 var mongoose = require("mongoose");
+require('dotenv/config');
 
 // Require all models
 var db = require("./models");
@@ -36,7 +37,7 @@ require("./routes/html-routes")(app);
 require("./routes/api-routes")(app);
 
 var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/badnews"
-mongoose.connect(MONGODB_URI);
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true }, () => console.log("connected to db"));
 
 
 //START THE SERVER - LISTEN TO REQUESTS
